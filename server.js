@@ -1,5 +1,6 @@
 import express from "express"
 import { graphqlHTTP } from "express-graphql"
+import schema from "./schema/schema.js"
 // GraphQL is the convention
 
 const app = express()

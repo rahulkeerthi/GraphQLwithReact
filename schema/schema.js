@@ -1,8 +1,5 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt } from "graphql"
-import { _ } from "lodash"
-// const {
-//   GraphQLObjectType
-// } = graphql
+import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } from "graphql"
+import _ from "lodash"
 
 const users = [
 	{ id: "23", firstName: "Bill", age: 20 },
@@ -33,3 +30,9 @@ const RootQuery = new GraphQLObjectType({
 		},
 	},
 })
+
+const schema = new GraphQLSchema({
+	query: RootQuery,
+})
+
+export default schema
