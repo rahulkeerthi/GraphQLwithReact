@@ -1,7 +1,10 @@
 import express from "express"
+
+// middleware function to plug into express
 import { graphqlHTTP } from "express-graphql"
+
+// schema
 import schema from "./schema/schema.js"
-// GraphQL is the convention
 
 const app = express()
 

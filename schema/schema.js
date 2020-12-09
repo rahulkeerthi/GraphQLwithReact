@@ -1,4 +1,5 @@
 import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } from "graphql"
+// lodash helps with enums traversal
 import _ from "lodash"
 
 const users = [
@@ -24,7 +25,7 @@ const RootQuery = new GraphQLObjectType({
 		user: {
 			type: UserType,
 			args: { id: { type: GraphQLString } },
-			resolve(parentValue, args) {
+			resolve(_parentValue, args) {
 				return _.find(users, { id: args.id })
 			},
 		},
