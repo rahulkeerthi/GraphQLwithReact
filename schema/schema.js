@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema } from "graphql"
+import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLSchema, GraphQLList } from "graphql"
 // lodash helps with enums traversal
 import axios from "axios"
 
@@ -11,17 +11,24 @@ import axios from "axios"
 // Defining a node type (Company)
 const CompanyType = new GraphQLObjectType({
 	name: "Company",
-	fields: {
+	fields: () => ({
 		id: { type: GraphQLString },
 		name: { type: GraphQLString },
 		description: { type: GraphQLString },
-	},
+		users: {
+			type: new GraphQLList(UserType),
+			args: { id: { type: GraphQLString } },
+			resolve(parentValue, args) {
+				return axios.get(`http://localhost:3000/companies/${parentValue.id}/users`).then(res => res.data)
+			},
+		},
+	}),
 })
 
 // Defining a node type (User)
 const UserType = new GraphQLObjectType({
 	name: "User",
-	fields: {
+	fields: () => ({
 		id: { type: GraphQLString },
 		firstName: { type: GraphQLString },
 		age: { type: GraphQLInt },
@@ -32,7 +39,7 @@ const UserType = new GraphQLObjectType({
 				return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`).then(resp => resp.data)
 			},
 		},
-	},
+	}),
 })
 
 // Root Query defines the entry point to the graph
@@ -45,6 +52,13 @@ const RootQuery = new GraphQLObjectType({
 			args: { id: { type: GraphQLString } },
 			resolve(_parentValue, args) {
 				return axios.get(`http://localhost:3000/users/${args.id}`).then(resp => resp.data)
+			},
+		},
+		company: {
+			type: CompanyType,
+			args: { id: { type: GraphQLString } },
+			resolve(parentValue, args) {
+				return axios.get(`http://localhost:3000/companies/${args.id}`).then(resp => resp.data)
 			},
 		},
 	},
